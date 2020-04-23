@@ -1,18 +1,25 @@
 plugins {
+    id("com.github.johnrengelman.shadow") version "4.0.4"
     java
     kotlin("jvm") version "1.3.72"
 }
 
-group = "org.example"
-version = "1.0-SNAPSHOT"
+group = "com.kul"
+version = "1.0"
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    testCompile("junit", "junit", "4.12")
+
+    implementation("org.ow2.asm", "asm", "7.3.1")
+    implementation("org.ow2.asm", "asm-tree", "7.3.1")
+    implementation("org.ow2.asm", "asm-commons", "7.3.1")
+    implementation("org.ow2.asm", "asm-util", "7.3.1")
+    implementation("com.google.guava:guava:26.0-jre")
 }
 
 configure<JavaPluginConvention> {
@@ -24,5 +31,30 @@ tasks {
     }
     compileTestKotlin {
         kotlinOptions.jvmTarget = "1.8"
+    }
+}
+
+tasks {
+    named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
+        classifier = "release"
+        mergeServiceFiles()
+        manifest {
+            attributes(mapOf("Main-Class" to "com.kul.Main"))
+        }
+    }
+
+    named<Jar>("jar") {
+
+        manifest {
+            attributes(mapOf("Main-Class" to "com.kul.Main"))
+        }
+
+    }
+
+}
+
+tasks {
+    build {
+        dependsOn(shadowJar)
     }
 }
