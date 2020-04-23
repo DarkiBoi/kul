@@ -39,14 +39,14 @@ tasks {
         classifier = "release"
         mergeServiceFiles()
         manifest {
-            attributes(mapOf("Main-Class" to "com.kul.Main"))
+            attributes(mapOf("Main-Class" to "com.kul.MainKt"))
         }
     }
 
     named<Jar>("jar") {
 
         manifest {
-            attributes(mapOf("Main-Class" to "com.kul.Main"))
+            attributes(mapOf("Main-Class" to "com.kul.MainKt"))
         }
 
     }
