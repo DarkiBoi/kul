@@ -1,10 +1,10 @@
 package com.kul
 
+import com.kul.transformer.TransformerManager
 import java.io.File
 
 object Obfuscator {
 
-    @ExperimentalStdlibApi
     @JvmStatic
     fun run(file: File, output: String) {
 
@@ -14,32 +14,11 @@ object Obfuscator {
 
         for (entry in classNodes) {
 
-            val charPool : CharArray = "鮉縑᱘晜骫炀嶾额諕".toCharArray()
+            for(transformer in TransformerManager.transformers) {
 
-            val randomString = (1..entry.key.length)
-                .map { _ -> kotlin.random.Random.nextInt(0, charPool.size) }
-                .map(charPool::get)
-                .joinToString("");
-
-            println("Renamed class " + entry.value.name)
-            entry.value.name = randomString
-            println("   -> " + entry.value.name)
-
-
-            val node = entry.value
-            val key = entry.key
-            for (field in node.fields) {
-
-                if(field.value == null) continue
-
-                println(key)
-                println("     -> " +field.name + " = " + field.value)
+                transformer.run(entry.key, entry.value)
 
             }
-
-
-
-
 
         }
 

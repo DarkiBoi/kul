@@ -4,12 +4,18 @@ import com.kul.transformer.transformers.ClassNameTransformer
 
 class TransformerManager {
 
-    var transformers: ArrayList<Transformer> = ArrayList()
+    companion object TransformerManager {
 
-    fun init() {
+        var transformers: ArrayList<Transformer> = ArrayList()
 
-        transformers.add(ClassNameTransformer())
+        fun init() {
+
+            transformers.add(ClassNameTransformer())
+
+        }
 
     }
+
+
 
 }

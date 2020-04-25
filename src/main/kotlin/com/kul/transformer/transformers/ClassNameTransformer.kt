@@ -5,7 +5,7 @@ import org.objectweb.asm.tree.ClassNode
 
 class ClassNameTransformer : Transformer() {
 
-    override fun run(node: ClassNode, key: String): ClassNode {
+    override fun run(key: String, node: ClassNode): ClassNode {
         TODO("DO STUFF")
 
     }
