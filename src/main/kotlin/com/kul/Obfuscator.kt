@@ -16,7 +16,7 @@ object Obfuscator {
 
             for(transformer in TransformerManager.transformers) {
 
-                transformer.run(entry.key, entry.value)
+                entry.setValue(transformer.run(entry.key, entry.value))
 
             }
 
