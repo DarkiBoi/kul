@@ -6,7 +6,7 @@ import org.objectweb.asm.tree.ClassNode
 
 class ObfuscatorTest : Transformer() {
 
-    override fun run(key: String, node: ClassNode): ClassNode {
+    override fun run() {
         TODO("STUFF WOULD RUN HERE")
     }
 

@@ -14,11 +14,7 @@ object Obfuscator {
 
         for (transformer in TransformerManager.transformers) {
 
-            for (entry in classNodes) {
-
-                entry.setValue(transformer.run(entry.key, entry.value))
-
-            }
+           transformer.run()
 
         }
 

@@ -81,4 +81,21 @@ object AsmUtils {
     }
 
 
+    fun applyRemap(remap: MutableMap<String?, String?>) {
+        val remapper = SimpleRemapper(remap)
+
+        println("Remap map: $remap")
+
+        classNodes.forEach {
+            val copy = ClassNode()
+            val adapter = ClassRemapper(copy, remapper)
+            it.value.accept(adapter)
+            classNodes.remove(it.value.name)
+            classNodes.put(it.value.name, copy)
+            println("Remapped " + it.value.name)
+        }
+    }
+
+
+
 }
