@@ -1,8 +1,6 @@
 package com.kul
 
-import com.kul.transformers.ObfuscatorTest
 import java.io.File
-import kotlin.math.roundToInt
 
 object Obfuscator {
 
@@ -15,8 +13,6 @@ object Obfuscator {
         val classNodes = AsmUtils.getClassNodes()
 
         for (entry in classNodes) {
-
-
 
             val charPool : CharArray = "鮉縑᱘晜骫炀嶾额諕".toCharArray()
 
