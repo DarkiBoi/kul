@@ -4,9 +4,9 @@ import com.kul.transformer.Transformer
 import org.objectweb.asm.tree.ClassNode
 
 
-class ObfuscatorTest(private val node: ClassNode, private val key: String) : Transformer() {
+class ObfuscatorTest : Transformer() {
 
-    override fun run(): ClassNode {
+    override fun run(node: ClassNode, key: String): ClassNode {
         TODO("STUFF WOULD RUN HERE")
     }
 
