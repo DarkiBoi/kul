@@ -80,19 +80,15 @@ object AsmUtils {
         return classNodes
     }
 
-
-    fun applyRemap(remap: MutableMap<String?, String?>) {
+    fun applyRemap(remap: Map<String?, String?>?) {
         val remapper = SimpleRemapper(remap)
-
-        println("Remap map: $remap")
-
-        classNodes.forEach {
+        for (node in ArrayList(classNodes.values)) {
             val copy = ClassNode()
             val adapter = ClassRemapper(copy, remapper)
-            it.value.accept(adapter)
-            classNodes.remove(it.value.name)
-            classNodes.put(it.value.name, copy)
-            println("Remapped " + it.value.name)
+            node.accept(adapter)
+            classNodes.remove(node.name)
+            classNodes.put(node.name, copy)
+            println("Remapped ${node.name}")
         }
     }
 
