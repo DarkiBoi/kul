@@ -12,9 +12,9 @@ object Obfuscator {
 
         val classNodes = AsmUtils.getClassNodes()
 
-        for (entry in classNodes) {
+        for (transformer in TransformerManager.transformers) {
 
-            for(transformer in TransformerManager.transformers) {
+            for (entry in classNodes) {
 
                 entry.setValue(transformer.run(entry.key, entry.value))
 

@@ -8,14 +8,14 @@ class MethodNameTransformer: Transformer() {
 
     override fun run(key: String, node: ClassNode): ClassNode {
 
-        val charPool : CharArray = "鮉縑᱘晜骫炀嶾额諕臝箙䵆�뾛腻㛞崙购袋㿦塚蓻닄箙䵆".toCharArray()
+        val charPool : CharArray = "鮉縑᱘晜骫炀嶾额諕臝箙䵆뾛腻㛞崙购袋㿦塚蓻닄箙䵆".toCharArray()
 
         for(method in node.methods) {
 
             val randomString = (1..4)
                 .map { kotlin.random.Random.nextInt(0, charPool.size) }
                 .map(charPool::get)
-                .joinToString("");
+                .joinToString("")
 
             method.name = randomString
 

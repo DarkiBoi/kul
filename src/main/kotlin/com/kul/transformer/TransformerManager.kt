@@ -12,7 +12,7 @@ class TransformerManager {
         fun init() {
 
             transformers.add(ClassNameTransformer())
-            transformers.add(MethodNameTransformer())
+            //transformers.add(MethodNameTransformer())
 
         }
 
