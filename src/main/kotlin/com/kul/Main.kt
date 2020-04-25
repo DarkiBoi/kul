@@ -1,7 +1,9 @@
 package com.kul
 
+import java.io.File
 import java.util.jar.JarFile
 
+@ExperimentalStdlibApi
 fun main(args: Array<String>) {
 
     if(args.isEmpty()) {
@@ -9,6 +11,6 @@ fun main(args: Array<String>) {
         return
     }
 
-    AsmUtils.setJar(JarFile(args[0]))
+    Obfuscator.run(File(args[0]), args[1])
 
 }
