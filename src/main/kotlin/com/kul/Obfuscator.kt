@@ -1,5 +1,6 @@
 package com.kul
 
+import com.kul.transformers.ObfuscatorTest
 import java.io.File
 import kotlin.math.roundToInt
 
@@ -15,6 +16,8 @@ object Obfuscator {
 
         for (entry in classNodes) {
 
+
+
             val charPool : CharArray = "鮉縑᱘晜骫炀嶾额諕".toCharArray()
 
             val randomString = (1..entry.key.length)
@@ -28,14 +31,18 @@ object Obfuscator {
 
 
             val node = entry.value
+            val key = entry.key
             for (field in node.fields) {
 
                 if(field.value == null) continue
 
-                println(entry.key)
+                println(key)
                 println("     -> " +field.name + " = " + field.value)
 
             }
+
+
+
 
 
         }
