@@ -1,6 +1,7 @@
 package com.kul.transformer
 
 import com.kul.transformer.transformers.ClassNameTransformer
+import com.kul.transformer.transformers.MethodNameTransformer
 
 class TransformerManager {
 
@@ -11,6 +12,7 @@ class TransformerManager {
         fun init() {
 
             transformers.add(ClassNameTransformer())
+            transformers.add(MethodNameTransformer())
 
         }
 
