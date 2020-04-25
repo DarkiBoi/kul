@@ -13,7 +13,7 @@ class MethodNameTransformer: Transformer() {
         for(method in node.methods) {
 
             val randomString = (1..4)
-                .map { _ -> kotlin.random.Random.nextInt(0, charPool.size) }
+                .map { kotlin.random.Random.nextInt(0, charPool.size) }
                 .map(charPool::get)
                 .joinToString("");
 
