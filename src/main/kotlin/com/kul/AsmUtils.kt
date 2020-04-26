@@ -21,7 +21,7 @@ object AsmUtils {
     private val files: MutableMap<String, ByteArray> = HashMap()
     private val classNodes: MutableMap<String, ClassNode> = ConcurrentHashMap()
 
-    fun loadFile(file: File) {
+    fun openJar(file: File) {
         // Check if its a jar file
         if (file.extension == "jar" || file.extension == "zip") {
 
@@ -50,53 +50,53 @@ object AsmUtils {
             }
         }
 
-        fun saveJar(output: String) {
-            var loc = output
-            if (!loc.endsWith(".jar")) loc += ".jar"
-            val jarPath = Paths.get(loc)
-            Files.deleteIfExists(jarPath)
-            val outJar = JarOutputStream(
-                Files.newOutputStream(
-                    jarPath,
-                    StandardOpenOption.CREATE,
-                    StandardOpenOption.CREATE_NEW,
-                    StandardOpenOption.WRITE
-                )
+    }
+
+    fun saveJar(output: String) {
+        var loc = output
+        if (!loc.endsWith(".jar")) loc += ".jar"
+        val jarPath = Paths.get(loc)
+        Files.deleteIfExists(jarPath)
+        val outJar = JarOutputStream(
+            Files.newOutputStream(
+                jarPath,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.CREATE_NEW,
+                StandardOpenOption.WRITE
             )
-            //Write classes into obf jar
-            for (node in classNodes.values) {
-                val entry = JarEntry(node.name + ".class")
-                outJar.putNextEntry(entry)
-                val writer = ClassWriter(ClassWriter.COMPUTE_MAXS)
-                node.accept(writer)
-                outJar.write(writer.toByteArray())
-                outJar.closeEntry()
-            }
-            //Copy files from previous jar into obf jar
-            for ((key, value) in files) {
-                outJar.putNextEntry(JarEntry(key))
-                outJar.write(value)
-                outJar.closeEntry()
-            }
-            outJar.close()
+        )
+        //Write classes into obf jar
+        for (node in classNodes.values) {
+            val entry = JarEntry(node.name + ".class")
+            outJar.putNextEntry(entry)
+            val writer = ClassWriter(ClassWriter.COMPUTE_MAXS)
+            node.accept(writer)
+            outJar.write(writer.toByteArray())
+            outJar.closeEntry()
         }
-
-        fun getClassNodes(): MutableMap<String, ClassNode> {
-            return classNodes
+        //Copy files from previous jar into obf jar
+        for ((key, value) in files) {
+            outJar.putNextEntry(JarEntry(key))
+            outJar.write(value)
+            outJar.closeEntry()
         }
+        outJar.close()
+    }
 
-        fun applyRemap(remap: Map<String?, String?>?) {
-            val remapper = SimpleRemapper(remap)
-            for (node in ArrayList(classNodes.values)) {
-                val copy = ClassNode()
-                val adapter = ClassRemapper(copy, remapper)
-                node.accept(adapter)
-                classNodes.remove(node.name)
-                classNodes.put(node.name, copy)
-                println("Remapped ${node.name}")
-            }
+    fun getClassNodes(): MutableMap<String, ClassNode> {
+        return classNodes
+    }
+
+    fun applyRemap(remap: Map<String?, String?>?) {
+        val remapper = SimpleRemapper(remap)
+        for (node in ArrayList(classNodes.values)) {
+            val copy = ClassNode()
+            val adapter = ClassRemapper(copy, remapper)
+            node.accept(adapter)
+            classNodes.remove(node.name)
+            classNodes.put(node.name, copy)
+            println("Remapped ${node.name}")
         }
-
     }
 
 
