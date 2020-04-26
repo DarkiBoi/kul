@@ -8,9 +8,9 @@ object Obfuscator {
     @JvmStatic
     fun run(file: File, output: String) {
 
-        AsmUtils.loadFile(file)
+        AsmUtils.openJar(file)
 
-        val classNodes = AsmUtils.getClassNodes()
+        println(AsmUtils.getClassNodes())
 
         for (transformer in TransformerManager.transformers) {
 

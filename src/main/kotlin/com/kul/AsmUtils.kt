@@ -5,6 +5,7 @@ import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.commons.ClassRemapper
 import org.objectweb.asm.commons.SimpleRemapper
 import org.objectweb.asm.tree.ClassNode
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -17,40 +18,29 @@ import java.util.jar.JarOutputStream
 
 object AsmUtils {
 
+    private val files: MutableMap<String, ByteArray> = HashMap()
     private val classNodes: MutableMap<String, ClassNode> = ConcurrentHashMap()
 
-    fun loadFile(file: File) {
+    fun openJar(file: File) {
+        val jar =  JarFile(file)
+        val entries = jar.entries()
 
-        // Check if its a jar file
-        if (file.extension == "jar" || file.extension == "zip") {
+        for(entry in entries) {
+            val baos = ByteArrayOutputStream()
+            val buf = ByteArray(256)
 
-            val jar = JarFile(file)
+            while(jar.getInputStream(entry).read(buf) != -1) baos.write(buf)
 
-            for (entry in jar.entries()) {
+            val bytes = baos.toByteArray()
 
-                // Remove / at the end (only applies to packages)
-                val name = entry.name.removeSuffix("/")
-
-                // Read file
-                val bytes = jar.getInputStream(entry).readBytes()
-
-                // If its a .class file and its not empty
-                if (name.endsWith(".class") && entry.size > 1) {
-
-                    val c = ClassNode()
-                    try {
-                        ClassReader(bytes).accept(c, ClassReader.EXPAND_FRAMES)
-                        classNodes[c.name] = c
-                    } catch (ignored: Exception) {
-                    }
-
-                }
-
+            if(entry.name.endsWith(".class")) {
+                val c = ClassNode()
+                ClassReader(bytes).accept(c, ClassReader.EXPAND_FRAMES)
+                classNodes[c.name] = c
+            } else {
+                files[entry.name] = bytes
             }
-
-
         }
-
     }
 
     fun saveJar(output: String) {
@@ -58,12 +48,11 @@ object AsmUtils {
         if (!loc.endsWith(".jar")) loc += ".jar"
         val jarPath = Paths.get(loc)
         Files.deleteIfExists(jarPath)
-        val outJar = JarOutputStream(
-            Files.newOutputStream(
-                jarPath,
-                StandardOpenOption.CREATE, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE
-            )
-        )
+        val outJar = JarOutputStream(Files.newOutputStream(jarPath,
+            StandardOpenOption.CREATE,
+            StandardOpenOption.CREATE_NEW,
+            StandardOpenOption.WRITE
+        ))
         //Write classes into obf jar
         for (node in getClassNodes().values) {
             val entry = JarEntry(node.name + ".class")
@@ -71,6 +60,12 @@ object AsmUtils {
             val writer = ClassWriter(ClassWriter.COMPUTE_MAXS)
             node.accept(writer)
             outJar.write(writer.toByteArray())
+            outJar.closeEntry()
+        }
+        //Copy files from previous jar into obf jar
+        for ((key, value) in files) {
+            outJar.putNextEntry(JarEntry(key))
+            outJar.write(value)
             outJar.closeEntry()
         }
         outJar.close()
@@ -91,7 +86,6 @@ object AsmUtils {
             println("Remapped ${node.name}")
         }
     }
-
 
 
 }

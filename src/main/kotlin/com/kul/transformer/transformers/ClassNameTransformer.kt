@@ -13,9 +13,9 @@ class ClassNameTransformer : Transformer() {
 
         val remap: MutableMap<String?, String?> = HashMap()
         AsmUtils.getClassNodes().forEach {
-            remap[it.value.name] = RandomStringGenerator.genRandomString(5)
+            remap[it.value.name] = RandomStringGenerator.genRandomString(4)
         }
-        
+
         AsmUtils.applyRemap(remap)
 
     }
