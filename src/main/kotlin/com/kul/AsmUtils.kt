@@ -21,25 +21,32 @@ object AsmUtils {
     private val files: MutableMap<String, ByteArray> = HashMap()
     private val classNodes: MutableMap<String, ClassNode> = ConcurrentHashMap()
 
-    fun openJar(file: File) {
-        val jar =  JarFile(file)
-        val entries = jar.entries()
+    fun loadFile(file: File) {
+        // Check if its a jar file
+        if (file.extension == "jar" || file.extension == "zip") {
 
-        for(entry in entries) {
-            val baos = ByteArrayOutputStream()
-            val buf = ByteArray(256)
+            val jar = JarFile(file)
 
-            while(jar.getInputStream(entry).read(buf) != -1) baos.write(buf)
+            for (entry in jar.entries()) {
 
-            val bytes = baos.toByteArray()
+                // Remove / at the end (only applies to packages)
+                val name = entry.name.removeSuffix("/")
 
-            if(entry.name.endsWith(".class")) {
-                val c = ClassNode()
-                ClassReader(bytes).accept(c, ClassReader.EXPAND_FRAMES)
-                classNodes[c.name] = c
-            } else {
-                files[entry.name] = bytes
-            }
+                // Read file
+                val bytes = jar.getInputStream(entry).readBytes()
+
+                // If its a .class file and its not empty
+                if (name.endsWith(".class") && entry.size > 1) {
+
+                    val c = ClassNode()
+                    try {
+                        ClassReader(bytes).accept(c, ClassReader.EXPAND_FRAMES)
+                        classNodes[c.name] = c
+                    } catch (ignored: Exception) {
+                    }
+
+                }
+
         }
     }
 
