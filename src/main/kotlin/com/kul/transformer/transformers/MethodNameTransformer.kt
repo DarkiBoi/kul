@@ -1,11 +1,9 @@
 package com.kul.transformer.transformers
 
 import com.kul.AsmUtils
-import com.kul.transformer.Transformer
-import org.objectweb.asm.tree.ClassNode
+import com.kul.transformer.ITransformer
 
-class MethodNameTransformer: Transformer() {
-
+class MethodNameTransformer: ITransformer {
 
     override fun run() {
 
