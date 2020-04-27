@@ -6,9 +6,9 @@ import java.io.File
 object Obfuscator {
 
     @JvmStatic
-    fun run(file: File, output: String) {
+    fun run(input: String, output: String) {
 
-        AsmUtils.openJar(file)
+        AsmUtils.openJar(File(input))
 
         println(AsmUtils.getClassNodes())
 
