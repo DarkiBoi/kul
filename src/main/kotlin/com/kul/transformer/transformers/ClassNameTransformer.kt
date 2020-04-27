@@ -1,15 +1,12 @@
 package com.kul.transformer.transformers
 
 import com.kul.AsmUtils
-import com.kul.transformer.Transformer
+import com.kul.transformer.ITransformer
 import com.kul.utils.RandomStringGenerator
-import java.nio.charset.Charset
 
-
-class ClassNameTransformer : Transformer() {
+class ClassNameTransformer : ITransformer {
 
     override fun run() {
-
 
         val remap: MutableMap<String?, String?> = HashMap()
         AsmUtils.getClassNodes().forEach {
@@ -19,6 +16,5 @@ class ClassNameTransformer : Transformer() {
         AsmUtils.applyRemap(remap)
 
     }
-
 
 }

@@ -1,10 +1,9 @@
 package com.kul.transformer.transformers
 
-import com.kul.transformer.Transformer
-import org.objectweb.asm.tree.ClassNode
+import com.kul.transformer.ITransformer
 
 
-class ObfuscatorTest : Transformer() {
+class ObfuscatorTest : ITransformer {
 
     override fun run() {
         TODO("STUFF WOULD RUN HERE")

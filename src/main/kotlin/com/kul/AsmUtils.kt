@@ -5,6 +5,7 @@ import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.commons.ClassRemapper
 import org.objectweb.asm.commons.SimpleRemapper
 import org.objectweb.asm.tree.ClassNode
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.nio.file.Files
@@ -14,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.jar.JarEntry
 import java.util.jar.JarFile
 import java.util.jar.JarOutputStream
+import java.util.jar.Manifest
 
 
 object AsmUtils {
@@ -22,34 +24,31 @@ object AsmUtils {
     private val classNodes: MutableMap<String, ClassNode> = ConcurrentHashMap()
 
     fun openJar(file: File) {
-        // Check if its a jar file
-        if (file.extension == "jar" || file.extension == "zip") {
+        val jar = JarFile(file)
+        val entries = jar.entries()
 
-            val jar = JarFile(file)
+        while(entries.hasMoreElements()) {
+            val entry = entries.nextElement()
 
-            for (entry in jar.entries()) {
-
-                // Remove / at the end (only applies to packages)
-                val name = entry.name.removeSuffix("/")
-
-                // Read file
-                val bytes = jar.getInputStream(entry).readBytes()
-
-                // If its a .class file and its not empty
-                if (name.endsWith(".class") && entry.size > 1) {
-
-                    val c = ClassNode()
-                    try {
-                        ClassReader(bytes).accept(c, ClassReader.EXPAND_FRAMES)
-                        classNodes[c.name] = c
-                    } catch (ignored: Exception) {
-                    }
-
+            jar.getInputStream(entry).use { `in` ->
+                val bytes: ByteArray
+                val baos = ByteArrayOutputStream()
+                val buf = ByteArray(256)
+                var n: Int
+                while(`in`.read(buf).also { n = it } != -1) {
+                    baos.write(buf, 0, n)
                 }
+                bytes = baos.toByteArray()
 
+                if(!entry.name.endsWith(".class")) {
+                    files[entry.name] = bytes
+                } else {
+                    val c = ClassNode()
+                    ClassReader(bytes).accept(c, ClassReader.EXPAND_FRAMES)
+                    classNodes.put(c.name, c)
+                }
             }
         }
-
     }
 
     fun saveJar(output: String) {
