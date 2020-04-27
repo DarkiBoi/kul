@@ -9,8 +9,8 @@ class ClassNameTransformer : ITransformer {
     override fun run() {
 
         val remap: MutableMap<String?, String?> = HashMap()
-        AsmUtils.getClassNodes().forEach {
-            remap[it.value.name] = RandomStringGenerator.genRandomString(4)
+        AsmUtils.getClassNodes().values.forEach {
+            remap[it.name] = RandomStringGenerator.genRandomString(4)
         }
 
         AsmUtils.applyRemap(remap)
