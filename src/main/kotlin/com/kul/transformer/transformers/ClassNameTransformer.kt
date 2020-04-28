@@ -23,11 +23,7 @@ class ClassNameTransformer : ITransformer {
             }
         }
 
-        //Write Manifest
-        val mos = ByteArrayOutputStream()
-        man.write(mos)
-        AsmUtils.getFiles()["META-INF/MANIFEST.MF"] = mos.toByteArray()
-
+        AsmUtils.writeManifest(man)
         AsmUtils.applyRemap(remap)
 
     }

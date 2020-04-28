@@ -101,5 +101,11 @@ object AsmUtils {
         }
     }
 
+    fun writeManifest(man: Manifest) {
+        val mos = ByteArrayOutputStream()
+        man.write(mos)
+        files["META-INF/MANIFEST.MF"] = mos.toByteArray()
+    }
+
 
 }
