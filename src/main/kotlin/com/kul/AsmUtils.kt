@@ -5,6 +5,7 @@ import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.commons.ClassRemapper
 import org.objectweb.asm.commons.SimpleRemapper
 import org.objectweb.asm.tree.ClassNode
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.nio.file.Files
@@ -14,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.jar.JarEntry
 import java.util.jar.JarFile
 import java.util.jar.JarOutputStream
+import java.util.jar.Manifest
 
 object AsmUtils {
 
@@ -81,6 +83,10 @@ object AsmUtils {
 
     fun getClassNodes(): MutableMap<String, ClassNode> {
         return classNodes
+    }
+
+    fun getFiles(): MutableMap<String, ByteArray> {
+        return files;
     }
 
     fun applyRemap(remap: Map<String?, String?>?) {
