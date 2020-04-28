@@ -16,7 +16,7 @@ class FieldNameTransformer : ITransformer {
 
         val remap: MutableMap<String?, String?> = HashMap()
 
-        val fields : MutableList<FieldNode> = ArrayList()
+        val fields: MutableList<FieldNode> = ArrayList()
 
         AsmUtils.getClassNodes().values.forEach { fields.addAll(it.fields) }
 
@@ -30,13 +30,20 @@ class FieldNameTransformer : ITransformer {
             //Stack will hold owner class node and all superclass references, and will loop through to them till every class node that interacts with the field is added to the remap map
             val stack: Stack<ClassNode> = Stack()
             stack.add(c)
+
             while (stack.size > 0) {
                 val node = stack.pop()
                 val key = node.name + "." + f.name
                 remap.put(key, name)
                 // Superclass references
-                stack.addAll(AsmUtils.getClassNodes().values.stream().filter { it.superName == node.name }.collect(
-                    Collectors.toList()))
+
+                AsmUtils.getClassNodes().values.forEach {
+                    if(it.superName == node.name) {
+                        stack.add(it)
+                    } else if (it.interfaces.contains(f.name)) {
+                        stack.add(it)
+                    }
+                }
             }
 
         }
