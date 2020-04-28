@@ -2,9 +2,12 @@ package com.kul
 
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassWriter
+import org.objectweb.asm.FieldVisitor
 import org.objectweb.asm.commons.ClassRemapper
+import org.objectweb.asm.commons.FieldRemapper
 import org.objectweb.asm.commons.SimpleRemapper
 import org.objectweb.asm.tree.ClassNode
+import org.objectweb.asm.tree.FieldNode
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -97,7 +100,7 @@ object AsmUtils {
             node.accept(adapter)
             classNodes.remove(node.name)
             classNodes.put(node.name, copy)
-            println("Remapped ${node.name}")
+            //println("Remapped ${node.name}")
         }
     }
 
