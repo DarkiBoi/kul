@@ -100,7 +100,7 @@ object AsmUtils {
             node.accept(adapter)
             classNodes.remove(node.name)
             classNodes.put(node.name, copy)
-            //println("Remapped ${node.name}")
+            println("Remapped ${node.name}")
         }
     }
 
