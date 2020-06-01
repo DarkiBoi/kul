@@ -18,8 +18,10 @@ class ClassNameTransformer : ITransformer {
 
         AsmUtils.getClassNodes().values.forEach {
             remap[it.name] = ParsingUtils.getPath(it.name) + RandomStringGenerator.genRandomString(4)
-            if(it.name == man.mainAttributes.getValue("Main-Class").replace(".", "/")) {
-                man.mainAttributes.putValue("Main-Class", remap[it.name]?.replace("/", "."))
+            for(attribute in man.mainAttributes) {
+                if(attribute.value == it.name) {
+                    man.mainAttributes.putValue(attribute.key as String?, remap[it.name]?.replace("/", "."))
+                }
             }
         }
 
