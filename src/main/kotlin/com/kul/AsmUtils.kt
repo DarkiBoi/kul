@@ -25,24 +25,42 @@ object AsmUtils {
     private val files: MutableMap<String, ByteArray> = HashMap()
     private val classNodes: MutableMap<String, ClassNode> = ConcurrentHashMap()
 
+    var excludes: ArrayList<String> = ArrayList()
+
     fun openJar(file: File) {
         val jar = JarFile(file)
         val entries = jar.entries()
 
-        while(entries.hasMoreElements()) {
+        while (entries.hasMoreElements()) {
             val entry = entries.nextElement()
 
             jar.getInputStream(entry).use { `in` ->
 
                 val bytes = `in`.readBytes()
 
-                if(!entry.name.endsWith(".class")) {
+                var excluded = false
+
+                var excludeEntry = ""
+
+                for(exclude in excludes) {
+                    excludeEntry = exclude
+                    if (excludeEntry.contains("*")) {
+                        excludeEntry = excludeEntry.substringBefore("*")
+                    }
+                    if(entry.name.startsWith(excludeEntry)) {
+                        excluded = true
+                        break
+                    }
+                }
+
+                if (!entry.name.endsWith(".class") || excluded) {
                     files[entry.name] = bytes
                 } else {
                     val c = ClassNode()
                     ClassReader(bytes).accept(c, ClassReader.EXPAND_FRAMES)
                     classNodes.put(c.name, c)
                 }
+
             }
         }
     }
@@ -83,7 +101,7 @@ object AsmUtils {
     }
 
     fun getFiles(): MutableMap<String, ByteArray> {
-        return files;
+        return files
     }
 
     fun applyRemap(remap: Map<String?, String?>?) {

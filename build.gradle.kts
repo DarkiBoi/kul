@@ -25,6 +25,8 @@ dependencies {
 
     implementation("com.sksamuel.hoplite:hoplite-core:$hopliteVersion")
     implementation("com.sksamuel.hoplite:hoplite-yaml:$hopliteVersion")
+
+    implementation("org.apache.poi:poi:4.1.2")
 }
 
 configure<JavaPluginConvention> {
