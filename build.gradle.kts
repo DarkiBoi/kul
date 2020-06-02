@@ -7,6 +7,8 @@ plugins {
 group = "com.kul"
 version = "1.0"
 
+var hopliteVersion = "1.2.3"
+
 repositories {
     mavenCentral()
     jcenter()
@@ -20,6 +22,9 @@ dependencies {
     implementation("org.ow2.asm", "asm-commons", "7.3.1")
     implementation("org.ow2.asm", "asm-util", "7.3.1")
     implementation("com.google.guava:guava:26.0-jre")
+
+    implementation("com.sksamuel.hoplite:hoplite-core:$hopliteVersion")
+    implementation("com.sksamuel.hoplite:hoplite-yaml:$hopliteVersion")
 }
 
 configure<JavaPluginConvention> {

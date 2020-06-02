@@ -1,6 +1,7 @@
 package com.kul.config
 
 import com.kul.Obfuscator
+import com.sksamuel.hoplite.ConfigLoader
 import java.io.File
 
 object ConfigReader {
@@ -8,29 +9,14 @@ object ConfigReader {
     var inputJar: String? = null
     var outputJar: String? = null
 
+    fun loadConfig(file: File) {
 
-    fun readConfig(file: File) {
+        val config = ConfigLoader().loadConfigOrThrow<KulConfig>(file)
 
+        inputJar = config.input
+        outputJar = config.output
 
-
-        file.forEachLine {
-            if (it.startsWith("input: ")) {
-
-                inputJar = it.substring(7, it.length)
-
-            } else if (it.startsWith("output: ")) {
-
-                outputJar = it.substring(8, it.length)
-
-            }
-
-        }
-
-        if (inputJar != null && outputJar != null) {
-
-            Obfuscator.run(inputJar!!, outputJar!!)
-
-        }
+        Obfuscator.run(inputJar!!, outputJar!!)
 
     }
 

@@ -15,7 +15,7 @@ fun main(args: Array<String>) {
 
     for(i in 0..args.size) {
         if(args[i] == "-config") {
-            ConfigReader.readConfig(File(args[i + 1]))
+            ConfigReader.loadConfig(File(args[i + 1]))
             break
         }
     }
