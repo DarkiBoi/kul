@@ -33,14 +33,8 @@ object AsmUtils {
             val entry = entries.nextElement()
 
             jar.getInputStream(entry).use { `in` ->
-                val bytes: ByteArray
-                val baos = ByteArrayOutputStream()
-                val buf = ByteArray(256)
-                var n: Int
-                while(`in`.read(buf).also { n = it } != -1) {
-                    baos.write(buf, 0, n)
-                }
-                bytes = baos.toByteArray()
+
+                val bytes = `in`.readBytes()
 
                 if(!entry.name.endsWith(".class")) {
                     files[entry.name] = bytes
