@@ -22,12 +22,8 @@ class ClassNameTransformer : ITransformer {
         AsmUtils.getClassNodes().values.forEach {
             remap[it.name] = ParsingUtils.getPath(it.name) + RandomStringGenerator.genRandomString(4)
             for(attribute in man.mainAttributes) {
-                var value: String?
-                try {
-                    value = Objects.toString(attribute.value)
-                } catch (e: ClassCastException) { continue }
-                if(value.replace(".", "/") == it.name) {
-                    man.mainAttributes.putValue(Objects.toString(attribute.key), remap[it.name]?.replace("/", "."))
+                if(attribute.value.toString().replace(".", "/") == it.name) {
+                    man.mainAttributes.putValue(attribute.key.toString(), remap[it.name]?.replace("/", "."))
                 }
             }
         }
