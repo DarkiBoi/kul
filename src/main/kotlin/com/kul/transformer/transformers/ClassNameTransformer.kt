@@ -24,7 +24,7 @@ class ClassNameTransformer : ITransformer {
         val files = AsmUtils.getFiles()
 
         AsmUtils.getClassNodes().values.forEach {
-            if(AsmUtils.excludes.contains(it)) return@forEach;
+            if(AsmUtils.excludes.contains(it.name)) return@forEach;
             remap[it.name] = ParsingUtils.getPath(it.name) + RandomStringGenerator.genRandomString(4)
             for (attribute in man.mainAttributes) {
                 if (attribute.value.toString().replace(".", "/") == it.name) {
