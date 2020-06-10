@@ -38,22 +38,7 @@ object AsmUtils {
 
                 val bytes = `in`.readBytes()
 
-                var excluded = false
-
-                var excludeEntry = ""
-
-                for(exclude in excludes) {
-                    excludeEntry = exclude
-                    if (excludeEntry.contains("*")) {
-                        excludeEntry = excludeEntry.substringBefore("*")
-                    }
-                    if(entry.name.startsWith(excludeEntry)) {
-                        excluded = true
-                        break
-                    }
-                }
-
-                if (!entry.name.endsWith(".class") || excluded) {
+                if (!entry.name.endsWith(".class")) {
                     files[entry.name] = bytes
                 } else {
                     val c = ClassNode()
