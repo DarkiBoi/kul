@@ -16,6 +16,7 @@ class DebugInfoRemover: ITransformer {
         val map: MutableMap<String, ClassNode> = mutableMapOf()
 
         AsmUtils.getClassNodes().values.forEach { cn ->
+            if(AsmUtils.excludes.contains(cn.name)) return@forEach;
             val cw = ClassWriter(ClassWriter.COMPUTE_MAXS)
             cn.accept(cw)
             val clone = ClassNode()
